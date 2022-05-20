@@ -14,15 +14,17 @@ import javax.swing.border.BevelBorder;
 import javax.swing.JButton;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.Font;
 
 public class MainFrame extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textUsername;
 	private JTextField textStockName;
 	private JTextField textStartDate;
 	private JTextField textEndDate;
-	private JTextField textPassword;
 
 //start GUI with error handler.
 	public static void main(String[] args) {
@@ -48,29 +50,10 @@ public class MainFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		// orange panel
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.ORANGE);
-		panel.setBounds(10, 11, 302, 30);
-		contentPane.add(panel);
-		panel.setLayout(null);
-		
-		textUsername = new JTextField();
-		textUsername.setBounds(6, 5, 143, 20);
-		textUsername.setText("username");
-		textUsername.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(textUsername);
-		
-		textPassword = new JTextField();
-		textPassword.setText("password");
-		textPassword.setHorizontalAlignment(SwingConstants.CENTER);
-		textPassword.setBounds(152, 5, 143, 20);
-		panel.add(textPassword);
-		
 		// green panel
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.GREEN);
-		panel_1.setBounds(10, 52, 302, 250);
+		panel_1.setBounds(10, 11, 302, 291);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -83,50 +66,61 @@ public class MainFrame extends JFrame {
 		textStartDate = new JTextField();
 		textStartDate.setHorizontalAlignment(SwingConstants.CENTER);
 		textStartDate.setText("start date(mm/dd/yyyy)");
-		textStartDate.setBounds(6, 36, 143, 20);
+		textStartDate.setBounds(6, 44, 143, 20);
 		panel_1.add(textStartDate);
 		
 		textEndDate = new JTextField();
 		textEndDate.setHorizontalAlignment(SwingConstants.CENTER);
 		textEndDate.setText("end date(mm/dd/yyyy)");
 		textEndDate.setColumns(10);
-		textEndDate.setBounds(152, 36, 143, 20);
+		textEndDate.setBounds(152, 44, 143, 20);
 		panel_1.add(textEndDate);
 		
 		JCheckBox checkboxDate = new JCheckBox("                                      Date");
 		checkboxDate.setHorizontalAlignment(SwingConstants.LEFT);
-		checkboxDate.setBounds(6, 63, 289, 23);
+		checkboxDate.setBounds(7, 105, 289, 23);
 		panel_1.add(checkboxDate);
 		
 		JCheckBox checkboxPrice = new JCheckBox("                                      Price");
 		checkboxPrice.setHorizontalAlignment(SwingConstants.LEFT);
-		checkboxPrice.setBounds(6, 89, 289, 23);
+		checkboxPrice.setBounds(7, 131, 289, 23);
 		panel_1.add(checkboxPrice);
 		
 		JCheckBox checkboxOpen = new JCheckBox("                                      Open");
 		checkboxOpen.setHorizontalAlignment(SwingConstants.LEFT);
-		checkboxOpen.setBounds(6, 115, 289, 23);
+		checkboxOpen.setBounds(7, 157, 289, 23);
 		panel_1.add(checkboxOpen);
 		
 		JCheckBox checkboxHigh = new JCheckBox("                                      High");
 		checkboxHigh.setHorizontalAlignment(SwingConstants.LEFT);
-		checkboxHigh.setBounds(6, 141, 289, 23);
+		checkboxHigh.setBounds(7, 183, 289, 23);
 		panel_1.add(checkboxHigh);
 		
 		JCheckBox checkboxLow = new JCheckBox("                                      Low");
 		checkboxLow.setHorizontalAlignment(SwingConstants.LEFT);
-		checkboxLow.setBounds(6, 167, 289, 23);
+		checkboxLow.setBounds(7, 209, 289, 23);
 		panel_1.add(checkboxLow);
 		
 		JCheckBox checkboxVol = new JCheckBox("                                      Vol");
 		checkboxVol.setHorizontalAlignment(SwingConstants.LEFT);
-		checkboxVol.setBounds(6, 193, 289, 23);
+		checkboxVol.setBounds(7, 235, 289, 23);
 		panel_1.add(checkboxVol);
 		
 		JCheckBox checkboxChange = new JCheckBox("                                      Change");
 		checkboxChange.setHorizontalAlignment(SwingConstants.LEFT);
-		checkboxChange.setBounds(6, 219, 289, 23);
+		checkboxChange.setBounds(7, 261, 289, 23);
 		panel_1.add(checkboxChange);
+		
+		JComboBox timeFramecomboBox = new JComboBox();
+		timeFramecomboBox.setModel(new DefaultComboBoxModel(new String[] {"Daily", "Weekly", "Monthly"}));
+		timeFramecomboBox.setBounds(84, 75, 211, 23);
+		panel_1.add(timeFramecomboBox);
+		
+		JLabel timeFrameLabel = new JLabel("Time Frame :");
+		timeFrameLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
+		timeFrameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		timeFrameLabel.setBounds(6, 75, 76, 23);
+		panel_1.add(timeFrameLabel);
 		
 		// gray panel
 		JPanel panel_2 = new JPanel();
