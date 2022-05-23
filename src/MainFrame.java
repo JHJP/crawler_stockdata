@@ -188,6 +188,9 @@ public class MainFrame extends JFrame {
 					if(isSelected == true) {
 						startCrawlButton.setText("crawling start");
 						if(selectedStock == "Apple") {
+							f.startDate = textStartDate.getText();
+							f.endDate = textEndDate.getText();
+							f.dropDownValue = timeFrameCombobox.getSelectedItem().toString();
 							f.startCrawl_apple();
 						} else if(selectedStock == "nasdaq 100 index") {
 							f.startCrawl_nasdaq100();
