@@ -113,7 +113,7 @@ public class MainFrame extends JFrame {
 		panel_1.add(checkboxChange);
 		
 		JComboBox timeFrameCombobox = new JComboBox();
-		timeFrameCombobox.setModel(new DefaultComboBoxModel(new String[] {"Daily", "Weekly", "Monthly"}));
+		timeFrameCombobox.setModel(new DefaultComboBoxModel(new String[] {"None", "Daily", "Weekly", "Monthly"}));
 		timeFrameCombobox.setBounds(84, 75, 180, 23);
 		panel_1.add(timeFrameCombobox);
 		
@@ -211,6 +211,17 @@ public class MainFrame extends JFrame {
 				}
 			});
 		
+		resetButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				f.initializer();
+				textStartDate.setText("start date(dd/mm/yyyy)");
+				textEndDate.setText("end date(dd/mm/yyyy)");
+				stocksCombobox.setSelectedIndex(0);
+				timeFrameCombobox.setSelectedIndex(0);
+			}
+		});
+		
+		//send defaultTableModel to table
 		DefaultTableModel model = (DefaultTableModel) stockPriceHistory.getModel();
 		f.getModel = model;
 		

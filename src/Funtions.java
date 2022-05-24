@@ -66,8 +66,6 @@ public class Funtions {
 		// table setup
 		addColumnToTable();
 		
-		// initiate global values.
-		initializer();
 	}
 	
 	public void webClicker(WebDriver driver) {
@@ -138,6 +136,17 @@ public class Funtions {
 			endDate = null;
 			dropDownValue = null;
 			isScrapped = false;
+			selectedStock = null;
+			url = null;
+			isFinished = false;
+			dateList.clear();
+			priceList.clear();
+			openList.clear();
+			highList.clear();
+			lowList.clear();
+			volList.clear();
+			changeList.clear();
+			getModel.setRowCount(0);
 		}
 		
 		public void addColumnToTable() {
@@ -153,6 +162,7 @@ public class Funtions {
 				getModel.addRow(columnData);
 			}
 		}
+		
 	}
 	
 	
