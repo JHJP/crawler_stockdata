@@ -1,7 +1,10 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
+
+import javax.swing.table.DefaultTableModel;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
@@ -18,7 +21,6 @@ public class Funtions {
 	String url;
 	boolean isScrapped = false;
 	boolean isFinished = false;
-	int counter = 0;
 	ArrayList<String> dateList = new ArrayList<String>();
 	ArrayList<String> priceList = new ArrayList<String>();
 	ArrayList<String> openList = new ArrayList<String>();
@@ -27,9 +29,10 @@ public class Funtions {
 	ArrayList<String> volList = new ArrayList<String>();
 	ArrayList<String> changeList = new ArrayList<String>();
 	
-	WebDriver driver1;
+	DefaultTableModel getModel;
 	
 	public void startCrawl() {
+		// select stock history by GUI dropdown menu
 		if(selectedStock == "Apple") {
 			url = "https://au.investing.com/equities/apple-computer-inc-historical-data";
 		} else if(selectedStock == "nasdaq 100 index") {
@@ -43,6 +46,7 @@ public class Funtions {
 		driver.get(url);
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		
+		// if the site popup ads open, close and activate webClicker function.
 		while(!isFinished) {
 			try {
 				try{
@@ -59,15 +63,11 @@ public class Funtions {
 			}
 		}
 		
-		initializer();
+		// table setup
+		addColumnToTable();
 		
-		System.out.println(dateList);
-		System.out.println(priceList);
-		System.out.println(openList);
-		System.out.println(highList);
-		System.out.println(lowList);
-		System.out.println(volList);
-		System.out.println(changeList);
+		// initiate global values.
+		initializer();
 	}
 	
 	public void webClicker(WebDriver driver) {
@@ -84,7 +84,7 @@ public class Funtions {
 		driver.findElement(By.id("endDate")).sendKeys(endDate);
 		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 		driver.findElement(By.id("applyBtn")).click();
-		//set dropdown menue 
+		//set dropdown menu
 		WebElement dropdown = driver.findElement(By.id("data_interval"));
 		Select select = new Select(dropdown);
 		select.selectByValue(dropDownValue);
@@ -101,9 +101,11 @@ public class Funtions {
 	}
 	
 	public void webScrape(WebDriver driver) {
+			// save table rows to the rows list
 			List<WebElement> rows = driver.findElements(By.xpath("//*[@id=\"curr_table\"]/tbody/tr"));
 			while(!isScrapped) {
 				for(int i = 1; i <= rows.size(); i++) {
+					// save table datas to the each list(date, price, open, high, low, vol and change lists).
 					WebElement date = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 1 +"]"));
 					dateList.add(date.getText());
 					WebElement price = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 2 +"]"));
@@ -119,6 +121,13 @@ public class Funtions {
 					WebElement change = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 7 +"]"));
 					changeList.add(change.getText());
 				}
+				Collections.reverse(dateList);
+				Collections.reverse(priceList);
+				Collections.reverse(openList);
+				Collections.reverse(highList);
+				Collections.reverse(lowList);
+				Collections.reverse(volList);
+				Collections.reverse(changeList);
 				isScrapped = true; 
 			}
 		}
@@ -129,6 +138,20 @@ public class Funtions {
 			endDate = null;
 			dropDownValue = null;
 			isScrapped = false;
+		}
+		
+		public void addColumnToTable() {
+			Object columnData[] = new Object[7];
+			for(int i = 0; i < dateList.size(); i++) {
+				columnData[0] = dateList.get(i);
+				columnData[1] = priceList.get(i);
+				columnData[2] = openList.get(i);
+				columnData[3] = highList.get(i);
+				columnData[4] = lowList.get(i);
+				columnData[5] = volList.get(i);
+				columnData[6] = changeList.get(i);
+				getModel.addRow(columnData);
+			}
 		}
 	}
 	
