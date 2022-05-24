@@ -177,15 +177,21 @@ public class Funtions {
 		public void addColumnToTable() {
 			Object columnData[] = new Object[7];
 			for(int i = 0; i < dateList.size(); i++) {
+				// make data with pure number
 				String dateListData = dateList.get(i);
-				dateListData = dateListData.replaceAll(",","/");
+				dateListData = dateListData.replaceAll(","," /");
+				String volListData = volList.get(i);
+				volListData = volListData.replaceAll("M","");
+				String changeListData = changeList.get(i);
+				changeListData = changeListData.replaceAll("%","");
+				// add to the stockPriceHistory table
 				columnData[0] = dateListData;
 				columnData[1] = priceList.get(i);
 				columnData[2] = openList.get(i);
 				columnData[3] = highList.get(i);
 				columnData[4] = lowList.get(i);
-				columnData[5] = volList.get(i);
-				columnData[6] = changeList.get(i);
+				columnData[5] = volListData;
+				columnData[6] = changeListData;
 				getModel.addRow(columnData);
 			}
 		}
