@@ -188,14 +188,23 @@ public class MainFrame extends JFrame {
 					if(isSelected == true) {
 						startCrawlButton.setText("crawling start");
 						if(selectedStock == "Apple") {
+							f.selectedStock = "Apple";
 							f.startDate = textStartDate.getText();
 							f.endDate = textEndDate.getText();
 							f.dropDownValue = timeFrameCombobox.getSelectedItem().toString();
-							f.startCrawl_apple();
+							f.startCrawl();
 						} else if(selectedStock == "nasdaq 100 index") {
-							f.startCrawl_nasdaq100();
+							f.selectedStock = "nasdaq 100 index";
+							f.startDate = textStartDate.getText();
+							f.endDate = textEndDate.getText();
+							f.dropDownValue = timeFrameCombobox.getSelectedItem().toString();
+							f.startCrawl();
 						} else if(selectedStock == "S&P 500 index") {
-							f.startCrawl_sp500();
+							f.selectedStock = "S&P 500 index";
+							f.startDate = textStartDate.getText();
+							f.endDate = textEndDate.getText();
+							f.dropDownValue = timeFrameCombobox.getSelectedItem().toString();
+							f.startCrawl();
 						}
 					} else {
 						startCrawlButton.setText("you need to select stock");
