@@ -1,13 +1,19 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -21,6 +27,7 @@ public class Funtions {
 	String url;
 	boolean isScrapped = false;
 	boolean isFinished = false;
+	boolean avoidStale = false;
 	ArrayList<String> dateList = new ArrayList<String>();
 	ArrayList<String> priceList = new ArrayList<String>();
 	ArrayList<String> openList = new ArrayList<String>();
@@ -28,7 +35,6 @@ public class Funtions {
 	ArrayList<String> lowList = new ArrayList<String>();
 	ArrayList<String> volList = new ArrayList<String>();
 	ArrayList<String> changeList = new ArrayList<String>();
-	
 	DefaultTableModel getModel;
 	
 	public void startCrawl() {
@@ -99,34 +105,53 @@ public class Funtions {
 	}
 	
 	public void webScrape(WebDriver driver) {
-			// save table rows to the rows list
-			List<WebElement> rows = driver.findElements(By.xpath("//*[@id=\"curr_table\"]/tbody/tr"));
-			while(!isScrapped) {
-				for(int i = 1; i <= rows.size(); i++) {
-					// save table datas to the each list(date, price, open, high, low, vol and change lists).
-					WebElement date = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 1 +"]"));
-					dateList.add(date.getText());
-					WebElement price = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 2 +"]"));
-					priceList.add(price.getText());
-					WebElement open = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 3 +"]"));
-					openList.add(open.getText());
-					WebElement high = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 4 +"]"));
-					highList.add(high.getText());
-					WebElement low = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 5 +"]"));
-					lowList.add(low.getText());
-					WebElement vol = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 6 +"]"));
-					volList.add(vol.getText());
-					WebElement change = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 7 +"]"));
-					changeList.add(change.getText());
+		while(!isScrapped) {
+			try {
+				try{
+					WebElement element = driver.findElement(By.xpath("//div[@id=\"PromoteSignUpPopUp\"]/div[@class=\"right\"]/i[@class=\"popupCloseIcon largeBannerCloser\"]"));
+					if (element.isDisplayed() && element.isEnabled()) {
+						element.click();
+					}
+				}catch (NoSuchElementException e) {
+					System.out.println(e);
 				}
-				Collections.reverse(dateList);
-				Collections.reverse(priceList);
-				Collections.reverse(openList);
-				Collections.reverse(highList);
-				Collections.reverse(lowList);
-				Collections.reverse(volList);
-				Collections.reverse(changeList);
-				isScrapped = true; 
+				// save table rows to the rows list
+				while(!avoidStale) {
+					try {
+						List<WebElement> rows = driver.findElements(By.xpath("//*[@id=\"curr_table\"]/tbody/tr"));
+						for(int i = 1; i <= rows.size(); i++) {
+							// save table datas to the each list(date, price, open, high, low, vol and change lists).
+							WebElement date = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 1 +"]"));
+							dateList.add(date.getText());
+							WebElement price = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 2 +"]"));
+							priceList.add(price.getText());
+							WebElement open = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 3 +"]"));
+							openList.add(open.getText());
+							WebElement high = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 4 +"]"));
+							highList.add(high.getText());
+							WebElement low = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 5 +"]"));
+							lowList.add(low.getText());
+							WebElement vol = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 6 +"]"));
+							volList.add(vol.getText());
+							WebElement change = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 7 +"]"));
+							changeList.add(change.getText());
+							}
+						Collections.reverse(dateList);
+						Collections.reverse(priceList);
+						Collections.reverse(openList);
+						Collections.reverse(highList);
+						Collections.reverse(lowList);
+						Collections.reverse(volList);
+						Collections.reverse(changeList);
+						isScrapped = true; 
+						avoidStale = true;
+					} catch(StaleElementReferenceException e) {
+						System.out.println(e);
+					}
+				}
+				} catch(NoSuchElementException e) {
+					System.out.println(e);
+				}
 			}
 		}
 	
@@ -152,7 +177,9 @@ public class Funtions {
 		public void addColumnToTable() {
 			Object columnData[] = new Object[7];
 			for(int i = 0; i < dateList.size(); i++) {
-				columnData[0] = dateList.get(i);
+				String dateListData = dateList.get(i);
+				dateListData = dateListData.replaceAll(",","/");
+				columnData[0] = dateListData;
 				columnData[1] = priceList.get(i);
 				columnData[2] = openList.get(i);
 				columnData[3] = highList.get(i);
@@ -163,6 +190,24 @@ public class Funtions {
 			}
 		}
 		
+		public void saveCsv(TableModel getModel) {
+		    try {
+		        FileWriter csv = new FileWriter(new File("D:\\SourceCode\\Java\\eclipse-workspace\\GUI_assginment\\stockHistory.csv"));
+		        for (int i = 0; i < getModel.getColumnCount(); i++) {
+		            csv.write(getModel.getColumnName(i) + ",");
+		        }
+		        csv.write("\n");
+		        for (int i = 0; i < getModel.getRowCount(); i++) {
+		            for (int j = 0; j < getModel.getColumnCount(); j++) {
+		                csv.write(getModel.getValueAt(i, j).toString() + ",");
+		            }
+		            csv.write("\n");
+		        }
+		        csv.close();
+		    } catch (IOException e) {
+		       System.out.println(e);
+		    }
+		}
 	}
 	
 	

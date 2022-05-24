@@ -77,37 +77,37 @@ public class MainFrame extends JFrame {
 		textEndDate.setBounds(141, 44, 123, 20);
 		panel_1.add(textEndDate);
 		
-		JCheckBox checkboxDate = new JCheckBox("                                      Date");
+		JCheckBox checkboxDate = new JCheckBox("                                      Date", true);
 		checkboxDate.setHorizontalAlignment(SwingConstants.LEFT);
 		checkboxDate.setBounds(6, 209, 258, 23);
 		panel_1.add(checkboxDate);
 		
-		JCheckBox checkboxPrice = new JCheckBox("                                      Price");
+		JCheckBox checkboxPrice = new JCheckBox("                                      Price", true);
 		checkboxPrice.setHorizontalAlignment(SwingConstants.LEFT);
 		checkboxPrice.setBounds(6, 235, 258, 23);
 		panel_1.add(checkboxPrice);
 		
-		JCheckBox checkboxOpen = new JCheckBox("                                      Open");
+		JCheckBox checkboxOpen = new JCheckBox("                                      Open", true);
 		checkboxOpen.setHorizontalAlignment(SwingConstants.LEFT);
 		checkboxOpen.setBounds(6, 261, 258, 23);
 		panel_1.add(checkboxOpen);
 		
-		JCheckBox checkboxHigh = new JCheckBox("                                      High");
+		JCheckBox checkboxHigh = new JCheckBox("                                      High", true);
 		checkboxHigh.setHorizontalAlignment(SwingConstants.LEFT);
 		checkboxHigh.setBounds(6, 287, 258, 23);
 		panel_1.add(checkboxHigh);
 		
-		JCheckBox checkboxLow = new JCheckBox("                                      Low");
+		JCheckBox checkboxLow = new JCheckBox("                                      Low", true);
 		checkboxLow.setHorizontalAlignment(SwingConstants.LEFT);
 		checkboxLow.setBounds(6, 313, 258, 23);
 		panel_1.add(checkboxLow);
 		
-		JCheckBox checkboxVol = new JCheckBox("                                      Vol");
+		JCheckBox checkboxVol = new JCheckBox("                                      Vol", true);
 		checkboxVol.setHorizontalAlignment(SwingConstants.LEFT);
 		checkboxVol.setBounds(6, 339, 258, 23);
 		panel_1.add(checkboxVol);
 		
-		JCheckBox checkboxChange = new JCheckBox("                                      Change");
+		JCheckBox checkboxChange = new JCheckBox("                                      Change", true);
 		checkboxChange.setHorizontalAlignment(SwingConstants.LEFT);
 		checkboxChange.setBounds(6, 365, 258, 23);
 		panel_1.add(checkboxChange);
@@ -159,6 +159,13 @@ public class MainFrame extends JFrame {
 			}
 		));
 		stockPriceHistory.getColumnModel().getColumn(0).setPreferredWidth(80);
+		stockPriceHistory.getColumnModel().getColumn(0).setMinWidth(0);
+		stockPriceHistory.getColumnModel().getColumn(1).setMinWidth(0);
+		stockPriceHistory.getColumnModel().getColumn(2).setMinWidth(0);
+		stockPriceHistory.getColumnModel().getColumn(3).setMinWidth(0);
+		stockPriceHistory.getColumnModel().getColumn(4).setMinWidth(0);
+		stockPriceHistory.getColumnModel().getColumn(5).setMinWidth(0);
+		stockPriceHistory.getColumnModel().getColumn(6).setMinWidth(0);
 		scrollPane.setViewportView(stockPriceHistory);
 		
 		// event handing function
@@ -218,6 +225,12 @@ public class MainFrame extends JFrame {
 				textEndDate.setText("end date(dd/mm/yyyy)");
 				stocksCombobox.setSelectedIndex(0);
 				timeFrameCombobox.setSelectedIndex(0);
+			}
+		});
+		
+		saveCsvButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				f.saveCsv(f.getModel);
 			}
 		});
 		
