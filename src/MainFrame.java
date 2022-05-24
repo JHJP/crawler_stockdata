@@ -155,7 +155,7 @@ public class MainFrame extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"Date", "Open", "Price", "High", "Low", "Vol", "Change%"
+				"Date", "Open", "Price", "High", "Low", "Vol(M)", "Change%"
 			}
 		));
 		stockPriceHistory.getColumnModel().getColumn(0).setPreferredWidth(80);
