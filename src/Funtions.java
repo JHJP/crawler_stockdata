@@ -118,33 +118,41 @@ public class Funtions {
 				// save table rows to the rows list
 				while(!avoidStale) {
 					try {
-						List<WebElement> rows = driver.findElements(By.xpath("//*[@id=\"curr_table\"]/tbody/tr"));
-						for(int i = 1; i <= rows.size(); i++) {
-							// save table datas to the each list(date, price, open, high, low, vol and change lists).
-							WebElement date = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 1 +"]"));
-							dateList.add(date.getText());
-							WebElement price = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 2 +"]"));
-							priceList.add(price.getText());
-							WebElement open = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 3 +"]"));
-							openList.add(open.getText());
-							WebElement high = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 4 +"]"));
-							highList.add(high.getText());
-							WebElement low = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 5 +"]"));
-							lowList.add(low.getText());
-							WebElement vol = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 6 +"]"));
-							volList.add(vol.getText());
-							WebElement change = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 7 +"]"));
-							changeList.add(change.getText());
+							List<WebElement> rows = driver.findElements(By.xpath("//*[@id=\"curr_table\"]/tbody/tr"));
+							for(int i = 1; i <= rows.size(); i++) {
+								// before crawl table data, check if there is popup ads or not / delete pop up. 
+								NoSuchElementHandler(driver);
+								// save table datas to the each list(date, price, open, high, low, vol and change lists).
+								WebElement date = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 1 +"]"));
+								dateList.add(date.getText());
+								NoSuchElementHandler(driver);
+								WebElement price = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 2 +"]"));
+								priceList.add(price.getText());
+								NoSuchElementHandler(driver);
+								WebElement open = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 3 +"]"));
+								openList.add(open.getText());
+								NoSuchElementHandler(driver);
+								WebElement high = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 4 +"]"));
+								highList.add(high.getText());
+								NoSuchElementHandler(driver);
+								WebElement low = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 5 +"]"));
+								lowList.add(low.getText());
+								NoSuchElementHandler(driver);
+								WebElement vol = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 6 +"]"));
+								volList.add(vol.getText());
+								NoSuchElementHandler(driver);
+								WebElement change = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 7 +"]"));
+								changeList.add(change.getText());
 							}
-						Collections.reverse(dateList);
-						Collections.reverse(priceList);
-						Collections.reverse(openList);
-						Collections.reverse(highList);
-						Collections.reverse(lowList);
-						Collections.reverse(volList);
-						Collections.reverse(changeList);
-						isScrapped = true; 
-						avoidStale = true;
+							Collections.reverse(dateList);
+							Collections.reverse(priceList);
+							Collections.reverse(openList);
+							Collections.reverse(highList);
+							Collections.reverse(lowList);
+							Collections.reverse(volList);
+							Collections.reverse(changeList);
+							isScrapped = true; 
+							avoidStale = true;
 					} catch(StaleElementReferenceException e) {
 						System.out.println(e);
 					}
@@ -160,10 +168,11 @@ public class Funtions {
 			startDate = null;
 			endDate = null;
 			dropDownValue = null;
-			isScrapped = false;
 			selectedStock = null;
 			url = null;
+			isScrapped = false;
 			isFinished = false;
+			avoidStale = false;
 			dateList.clear();
 			priceList.clear();
 			openList.clear();
@@ -180,16 +189,30 @@ public class Funtions {
 				// make data with pure number
 				String dateListData = dateList.get(i);
 				dateListData = dateListData.replaceAll(","," /");
+				
 				String volListData = volList.get(i);
 				volListData = volListData.replaceAll("M","");
+				
 				String changeListData = changeList.get(i);
 				changeListData = changeListData.replaceAll("%","");
+				
+				String priceListData = priceList.get(i);
+				priceListData = priceListData.replaceAll(",","");
+				
+				String openListData = openList.get(i);
+				openListData = openListData.replaceAll(",","");
+				
+				String highListData = highList.get(i);
+				highListData = highListData.replaceAll(",","");
+				
+				String lowListData = lowList.get(i);
+				lowListData = lowListData.replaceAll(",","");
 				// add to the stockPriceHistory table
 				columnData[0] = dateListData;
-				columnData[1] = priceList.get(i);
-				columnData[2] = openList.get(i);
-				columnData[3] = highList.get(i);
-				columnData[4] = lowList.get(i);
+				columnData[1] = priceListData;
+				columnData[2] = openListData;
+				columnData[3] = highListData;
+				columnData[4] = lowListData;
 				columnData[5] = volListData;
 				columnData[6] = changeListData;
 				getModel.addRow(columnData);
@@ -213,6 +236,17 @@ public class Funtions {
 		    } catch (IOException e) {
 		       System.out.println(e);
 		    }
+		}
+		
+		public void NoSuchElementHandler(WebDriver driver) {
+			try{
+				WebElement element = driver.findElement(By.xpath("//div[@id=\"PromoteSignUpPopUp\"]/div[@class=\"right\"]/i[@class=\"popupCloseIcon largeBannerCloser\"]"));
+				if (element.isDisplayed() && element.isEnabled()) {
+					element.click();
+				}
+			}catch (NoSuchElementException e) {
+				System.out.println(e);
+			}
 		}
 	}
 	
