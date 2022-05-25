@@ -1,3 +1,4 @@
+![image](https://user-images.githubusercontent.com/78130703/170065724-4a2aa49e-e134-4d75-b958-760da1df849b.png)
 # Versions
 1. edge version : Version 101.0.1210.47 (Official build) (64-bit)
 2. OS : window 64 bit
