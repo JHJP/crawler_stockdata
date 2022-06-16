@@ -196,7 +196,7 @@ public class Funtions {
 				if(dateListData.contains("Jan")) {
 					dateListData = dateListData.replaceAll("Jan","01");
 				}else if(dateListData.contains("Feb")) {
-					dateListData = dateListData.replaceAll("Jan","02");
+					dateListData = dateListData.replaceAll("Feb","02");
 				}else if(dateListData.contains("Mar")) {
 					dateListData = dateListData.replaceAll("Mar","03");
 				}else if(dateListData.contains("Apr")) {
