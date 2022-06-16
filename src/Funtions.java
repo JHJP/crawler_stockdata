@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -120,29 +120,33 @@ public class Funtions {
 					try {
 							List<WebElement> rows = driver.findElements(By.xpath("//*[@id=\"curr_table\"]/tbody/tr"));
 							for(int i = 1; i <= rows.size(); i++) {
-								// before crawl table data, check if there is popup ads or not / delete pop up. 
-								NoSuchElementHandler(driver);
-								// save table datas to the each list(date, price, open, high, low, vol and change lists).
-								WebElement date = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 1 +"]"));
-								dateList.add(date.getText());
-								NoSuchElementHandler(driver);
-								WebElement price = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 2 +"]"));
-								priceList.add(price.getText());
-								NoSuchElementHandler(driver);
-								WebElement open = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 3 +"]"));
-								openList.add(open.getText());
-								NoSuchElementHandler(driver);
-								WebElement high = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 4 +"]"));
-								highList.add(high.getText());
-								NoSuchElementHandler(driver);
-								WebElement low = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 5 +"]"));
-								lowList.add(low.getText());
-								NoSuchElementHandler(driver);
-								WebElement vol = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 6 +"]"));
-								volList.add(vol.getText());
-								NoSuchElementHandler(driver);
-								WebElement change = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 7 +"]"));
-								changeList.add(change.getText());
+								try {
+									// before crawl table data, check if there is popup ads or not / delete pop up. 
+									NoSuchElementHandler(driver);
+									// save table datas to the each list(date, price, open, high, low, vol and change lists).
+									WebElement date = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 1 +"]"));
+									dateList.add(date.getText());
+									NoSuchElementHandler(driver);
+									WebElement price = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 2 +"]"));
+									priceList.add(price.getText());
+									NoSuchElementHandler(driver);
+									WebElement open = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 3 +"]"));
+									openList.add(open.getText());
+									NoSuchElementHandler(driver);
+									WebElement high = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 4 +"]"));
+									highList.add(high.getText());
+									NoSuchElementHandler(driver);
+									WebElement low = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 5 +"]"));
+									lowList.add(low.getText());
+									NoSuchElementHandler(driver);
+									WebElement vol = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 6 +"]"));
+									volList.add(vol.getText());
+									NoSuchElementHandler(driver);
+									WebElement change = driver.findElement(By.xpath("//*[@id=\"curr_table\"]/tbody/tr["+ i +"]/td["+ 7 +"]"));
+									changeList.add(change.getText());
+								} catch(NoSuchElementException e) {
+									System.out.println("Row index error" + e);
+								}
 							}
 							Collections.reverse(dateList);
 							Collections.reverse(priceList);
@@ -188,7 +192,33 @@ public class Funtions {
 			for(int i = 0; i < dateList.size(); i++) {
 				// make data with pure number
 				String dateListData = dateList.get(i);
-				dateListData = dateListData.replaceAll(","," /");
+				dateListData = dateListData.replaceAll(",","");
+				if(dateListData.contains("Jan")) {
+					dateListData = dateListData.replaceAll("Jan","01");
+				}else if(dateListData.contains("Feb")) {
+					dateListData = dateListData.replaceAll("Jan","02");
+				}else if(dateListData.contains("Mar")) {
+					dateListData = dateListData.replaceAll("Mar","03");
+				}else if(dateListData.contains("Apr")) {
+					dateListData = dateListData.replaceAll("Apr","04");
+				}else if(dateListData.contains("May")) {
+					dateListData = dateListData.replaceAll("May","05");
+				}else if(dateListData.contains("Jun")) {
+					dateListData = dateListData.replaceAll("Jun","06");
+				}else if(dateListData.contains("Jul")) {
+					dateListData = dateListData.replaceAll("Jul","07");
+				}else if(dateListData.contains("Aug")) {
+					dateListData = dateListData.replaceAll("Aug","08");
+				}else if(dateListData.contains("Sep")) {
+					dateListData = dateListData.replaceAll("Sep","09");
+				}else if(dateListData.contains("Oct")) {
+					dateListData = dateListData.replaceAll("Oct","10");
+				}else if(dateListData.contains("Nov")) {
+					dateListData = dateListData.replaceAll("Nov","11");
+				}else if(dateListData.contains("Dec")) {
+					dateListData = dateListData.replaceAll("Dec","12");
+				}
+				dateListData = reverseBySpace(dateListData);
 				
 				String volListData = volList.get(i);
 				volListData = volListData.replaceAll("M","");
@@ -217,6 +247,25 @@ public class Funtions {
 				columnData[6] = changeListData;
 				getModel.addRow(columnData);
 			}
+		}
+		
+		public String reverseBySpace(String str) {
+			// Specifying the pattern to be searched
+	        Pattern pattern = Pattern.compile("\\s");
+	  
+	        // splitting str with a pattern
+	        String[] temp = pattern.split(str);
+	        String result = "";
+	        String month = "";
+	        String day = "";
+	        String year = "";
+	  
+	        month = temp[0];
+	        day = temp[1];
+	        year = temp[2];
+	        result = year + "-" + month + "-" + day;
+
+	        return result;
 		}
 		
 		public void saveCsv(TableModel getModel) {
